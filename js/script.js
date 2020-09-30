@@ -43,20 +43,7 @@ function drawPaddle(){
     ctx.closePath();
 }
 
-function draw(){
-    //clear previous frame
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-    //draw code
-    drawBall();
-    drawPaddle();
-    x += dx;
-    y += dy;
-    if(y + dy < ballRadius || y + dy > canvas.height-ballRadius){
-        dy = -dy;
-    }
-    if(x + dx < ballRadius || x + dx > canvas.width-ballRadius){
-        dx = -dx;
-    }
+function buttonPressed(){
     if(rightPressed){
         paddleX += 7;
         if(paddleWidth + paddleX > canvas.width){
@@ -70,6 +57,41 @@ function draw(){
             paddleX = 0;
         }
     }
+}
+
+function ballBoundaries(){
+    if(x + dx < ballRadius || x + dx > canvas.width-ballRadius){
+        dx = -dx;
+    }
+    if(y + dy < ballRadius ){
+        dy = -dy;
+    }
+    // check if ball hits the paddle or goes throught the bottom
+    else if(y + dy > canvas.height-ballRadius){
+        if(x > paddleX && x  < paddleX + paddleWidth){
+            dy = -dy;
+        }
+        else{
+            alert("GAME OVER");
+            document.location.reload();
+            clearInterval(interval);
+        }
+       
+    }
+
+}
+
+function draw(){
+    //clear previous frame
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    //draw code
+    drawBall();
+    drawPaddle();
+    x += dx;
+    y += dy;
+    ballBoundaries();
+    buttonPressed();
+
 }
 document.addEventListener("keydown", keyDownHandler,false);
 document.addEventListener("keyup",keyUpHandler,false);
@@ -94,7 +116,7 @@ function keyUpHandler(e){
 
 
 
-setInterval(draw,ballSpeed);
+var interval = setInterval(draw,ballSpeed);
 
 // //Red rectange
 // ctx.beginPath();
