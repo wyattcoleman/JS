@@ -26,6 +26,124 @@ var paddleX = (canvas.width-paddleWidth)/2;
 var rightPressed = false;
 var leftPressed = false;
 
+
+//bricks to smash
+                    //brickColumnCount == 8
+                    //brickRowCount == 5
+                    //brickOffsetLeft == 50
+var brickRowCount = 3;
+var brickColumnCount =  5;
+var brickWidth = 75;
+var brickHeight = 20;
+var brickPadding = 10;
+var brickOffsetTop = 30;
+var brickOffsetLeft =  canvas.width/(brickColumnCount);
+var bricks = [];
+for(var c = 0; c < brickColumnCount; c++){
+    bricks[c] = [];
+    for(var r = 0; r < brickRowCount; r++){
+        bricks[c][r] = {x:0, y:0};
+    }
+}
+function drawBricksEveryOther(){
+    var diamond = 1;
+    for(var c=0; c < brickColumnCount; c++){
+        for(var r=0; r< brickRowCount; r++){
+            if(c % 2 == 0){
+                var brickX =  (c*(brickWidth + brickPadding)) + brickOffsetLeft;
+                var brickY = (r *(brickHeight + brickPadding)) + brickOffsetTop;
+
+                bricks[c][r].x = brickX;
+                bricks[c][r].y = brickY;
+                
+                ctx.beginPath();
+                ctx.rect(brickX,brickY, brickWidth, brickHeight);
+                ctx.fillStyle = "#0095DD";
+                ctx.fill();
+                ctx.closePath();
+            }
+            else{
+                r = brickRowCount;
+                if(diamond < brickRowCount ){
+                    diamond += 1;
+                }
+                else{
+                    diamond -= 1;
+                }
+                
+            }
+        }
+    }
+}
+function drawBricks(){
+    var diamond = 1;
+    for(var c=0; c < brickColumnCount; c++){
+        for(var r=0; r< brickRowCount; r++){
+            if(c % 2 == 0 || r < 2){
+                var brickX =  (c*(brickWidth + brickPadding)) + brickOffsetLeft;
+                var brickY = (r *(brickHeight + brickPadding)) + brickOffsetTop;
+
+                bricks[c][r].x = brickX;
+                bricks[c][r].y = brickY;
+                
+                ctx.beginPath();
+                ctx.rect(brickX,brickY, brickWidth, brickHeight);
+                ctx.fillStyle = "#0095DD";
+                ctx.fill();
+                ctx.closePath();
+            }
+            else{
+                r = brickRowCount;
+                if(diamond < brickRowCount ){
+                    diamond += 1;
+                }
+                else{
+                    diamond -= 1;
+                }
+                
+            }
+        }
+    }
+}
+
+
+
+
+function drawBricksDiamond(){
+    //this.brickColumnCount = 8;
+   // brickRowCount = 5;
+    //brickOffsetLeft = 50;
+    var diamond = 0;
+    for(var c=0; c < brickColumnCount; c++){
+        for(var r=0; r< brickRowCount; r++){
+            if(r <= diamond){
+                var brickX =  (c*(brickWidth + brickPadding)) + brickOffsetLeft;
+                var brickY = (r *(brickHeight + brickPadding)) + brickOffsetTop;
+
+                bricks[c][r].x = brickX;
+                bricks[c][r].y = brickY;
+                
+                ctx.beginPath();
+                ctx.rect(brickX,brickY, brickWidth, brickHeight);
+                ctx.fillStyle = "#0095DD";
+                ctx.fill();
+                ctx.closePath();
+            }
+            else{
+                r = brickRowCount;
+                if(c < Math.floor(brickColumnCount/2)-1){
+                    diamond += 1;
+                    
+                }
+                else{
+                    diamond -= 1;
+                }
+                
+            }
+        }
+    }
+}
+
 function Reset(){
     x = canvas.width/2;
     y = canvas.height-30;
@@ -97,6 +215,7 @@ function draw(){
     ctx.clearRect(0,0,canvas.width,canvas.height);
     //draw code
     drawBall();
+    drawBricksDiamond();
     drawPaddle();
     x += dx;
     y += dy;
